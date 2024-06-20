@@ -3,16 +3,26 @@
 from rest_framework import serializers
 from .models import Producer, Product, Province, Supplier, CompanyClient, PersonalClient, Purchase, Sale
 
-class ProducerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Producer
-        fields = '__all__'
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-
+        
+class ProducerSerializer(serializers.ModelSerializer):
+    # product = ProductSerializer(many=True)
+    product = serializers.SerializerMethodField()
+    class Meta:
+        model = Producer
+        fields = ['id', 'company_name', 'manager_name', 
+                  'product', 'profile_photo', 'address',
+                  'tax_code', 'nrc', 'nat_id', 'phone_number', 'province','about']
+    
+    #Restriction de product
+    def get_product(self, instance):
+        queryset = instance.product.filter(sector_code='J')
+        serializer = ProductSerializer(queryset, many=True)
+        return serializer.data    
+        
 class ProvinceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province

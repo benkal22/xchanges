@@ -17,6 +17,8 @@ class Producer(AbstractUser):
     product = models.ManyToManyField(Product, blank=True) 
     sector_label =  models.fields.CharField(blank=True, null=True, max_length=200)
     about =  models.fields.CharField(blank=True, null=True, max_length=1000)
+    is_active = models.BooleanField(blank=True, default=True)
+    is_approved = models.BooleanField(blank=True, default=False)
 
     def __str__(self) -> str:
         return f'{self.company_name}'
