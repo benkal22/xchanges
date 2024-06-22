@@ -1,21 +1,16 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+# inventory/models.py
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
-
 from ..managers import CustomUserManager
 
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)  # Champ email unique
+    
+    # Définir le champ USERNAME_FIELD à 'username' et REQUIRED_FIELDS à ['email']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
-
-    USERNAME_FIELD = "username"
-    PASSWORD_FIELD = "password"
-    REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
+    objects = CustomUserManager()  # Utilisez le gestionnaire personnalisé
 
     def __str__(self):
         return self.username

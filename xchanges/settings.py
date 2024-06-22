@@ -130,7 +130,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'xchanges.wsgi.application'
 
-# AUTH_USER_MODEL = 'inventory.CustomUser'
+AUTH_USER_MODEL = 'inventory.CustomUser'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
