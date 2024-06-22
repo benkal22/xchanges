@@ -19,7 +19,7 @@ class Supplier(models.Model):
     province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='supplier_province')
     sector_label = models.CharField(blank=True, null=True, max_length=200)
     
-    def __str__(self) -> str:
+    def __str__(self):
         return f'{self.company_name}'
     
 
