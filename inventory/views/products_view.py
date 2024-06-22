@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework import viewsets
 from ..models import Product
-from ..serializers import ProductSerializer
+from ..serializers.product_serializer import ProductSerializer, ProductSerializerRestrict
 
 class ProductViewSet(ReadOnlyModelViewSet):
     serializer_class = ProductSerializer

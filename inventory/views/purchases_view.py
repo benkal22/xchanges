@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from ..models import Purchase
-from ..serializers import PurchaseSerializer
+from ..serializers.purchase_serializer import PurchaseSerializer
 
 class PurchaseViewSet(viewsets.ModelViewSet):
     serializer_class = PurchaseSerializer

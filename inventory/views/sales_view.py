@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from ..models import Sale
-from ..serializers import SaleSerializer
+from ..serializers.sale_serializer import SaleSerializer
 
 class SaleViewSet(viewsets.ModelViewSet):
     serializer_class = SaleSerializer

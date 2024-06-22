@@ -1,4 +1,5 @@
 from django.db import models
+# from inventory.models.users import CustomUser
 from inventory.models.products import Product
 from inventory.models.producers import Producer
 from inventory.models.company_clients import CompanyClient
