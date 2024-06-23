@@ -1,0 +1,14 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+
+<h1>Liste de producteurs</h1>
+<p>{{ producer|length }} producteurs en République Démocratique du Congo</p>
+<ul>
+        {% for producer in producer %}
+        <li><a href="/producer/{{producer.id}}/">
+            {{producer.company_name}}
+        </a></li>
+        {% endfor %}
+</ul>
+{% endblock %}

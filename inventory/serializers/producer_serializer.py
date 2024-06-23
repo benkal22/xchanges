@@ -4,10 +4,10 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from ..models import Producer
 from .product_serializer import ProductSerializerRestrict, ProductSerializer
-from .user_serializer import UserSerializer
+from .user_serializer import CustomUserSerializer
     
 class ProducerSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = CustomUserSerializer()
 
     class Meta:
         model = Producer

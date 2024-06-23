@@ -1,10 +1,17 @@
-# from rest_framework import serializers
-# # from django.contrib.auth.models import User
-# from ..models.producers import Producer, CustomUser
+from rest_framework import serializers
+from ..models.producers import CustomUser
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email']
+        
+class ResetPasswordRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         # model = User
-#         model = CustomUser
-#         fields = ('id', 'username', 'email', 'is_admin', 'is_producer')
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.RegexField(
+        regex=r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+        write_only=True,
+        error_messages={'invalid': 'Password must be at least 8 characters long with at least one capital letter, one number, and one special character'})
+    confirm_password = serializers.CharField(write_only=True, required=True)

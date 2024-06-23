@@ -1,0 +1,41 @@
+{% extends "base_login.html" %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Connexion</h5>
+            <p class="text-center small">Entrez votre nom d'utilisateur et votre mot de passe</p>
+        </div>
+        <form method="post" class="row g-3 needs-validation" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="col-12">
+                <label for="username" class="form-label">Nom d'utilisateur</label>
+                <input type="text" name="username" class="form-control" id="username" required>
+                <div class="invalid-feedback">
+                    Veuillez entrer votre nom d'utilisateur.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" name="password" class="form-control" id="password" required>
+                <div class="invalid-feedback">
+                    Veuillez entrer votre mot de passe.
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">Se connecter</button>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0"><a href="{% url 'password_reset' %}">Mot de passe oublié ?</a></p>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0">Pas de compte ? <a href="{% url 'signup' %}">Créer un compte</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

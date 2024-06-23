@@ -13,10 +13,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from django.conf import settings
 from django.conf.urls.static import static
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -40,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -58,7 +63,13 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+SITE_ID = 1 
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# Configurer CORS
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # URL de votre application React
+]
 
 # REST_FRAMEWORK = {
 #     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -72,6 +83,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 SIMPLE_JWT = {
@@ -112,10 +126,30 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+                os.path.join(BASE_DIR, 'inventory', 'templates'),
+                os.path.join(BASE_DIR, 'static')
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,7 +176,7 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 urlpatterns = [
@@ -193,7 +227,8 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# import os
+LOGIN_REDIRECT_URL = 'profile'
+
 # import django
 # from django.core.management import call_command
 
@@ -203,3 +238,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         call_command('create_superuser')
 #     except Exception as e:
 #         print(f"Error creating superuser: {e}")
+
+# Exemple de configuration SMTP pour Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your_email@gmail.com'  # Votre adresse email Gmail
+EMAIL_HOST_PASSWORD = 'your_password'     # Le mot de passe de votre compte Gmail (utiliser un jeton d'application si l'authentification à deux facteurs est activée)
+
+#Test à supprimer
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+import environ
+import os
+
+# Initialise le package environ
+env = environ.Env()
+# Lis le fichier .env s'il existe
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Utilisation de la variable PASSWORD_RESET_BASE_URL
+PASSWORD_RESET_BASE_URL = env('PASSWORD_RESET_BASE_URL', default='http://127.0.0.1:8000/reset_password')

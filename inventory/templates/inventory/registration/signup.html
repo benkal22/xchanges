@@ -1,0 +1,52 @@
+{% extends "base_login.html" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Créer un compte</h5>
+            <p class="text-center small">Entrez vos informations personnelles pour créer un compte</p>
+        </div>
+        <form method="post" class="row g-3 needs-validation" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="col-12">
+                <label for="username" class="form-label">Nom d'utilisateur</label>
+                <input type="text" name="username" class="form-control" id="username" required>
+                <div class="invalid-feedback">
+                    Veuillez choisir un nom d'utilisateur.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="email" class="form-label">Adresse Email</label>
+                <input type="email" name="email" class="form-control" id="email" required>
+                <div class="invalid-feedback">
+                    Veuillez entrer une adresse email valide.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="password1" class="form-label">Mot de passe</label>
+                <input type="password" name="password1" class="form-control" id="password1" required>
+                <div class="invalid-feedback">
+                    Veuillez entrer un mot de passe.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="password2" class="form-label">Confirmez le mot de passe</label>
+                <input type="password" name="password2" class="form-control" id="password2" required>
+                <div class="invalid-feedback">
+                    Les mots de passe ne correspondent pas.
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">Créer un compte</button>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0">Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

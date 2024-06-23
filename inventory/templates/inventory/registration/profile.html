@@ -1,0 +1,13 @@
+<!-- inventory/templates/inventory/profile.html -->
+
+{% extends 'base_login.html' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Bienvenue, {{ user.username }}!</h2>
+    <p>Email: {{ user.email }}</p>
+    <!-- Ajoutez d'autres informations de profil ici -->
+</div>
+{% endblock %}

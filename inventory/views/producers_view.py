@@ -4,26 +4,17 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from ..serializers.producer_serializer import ProducerListSerializer, ProducerDetailSerializer
+# from ..serializers.producer_serializer import ProducerListSerializer, ProducerDetailSerializer
 
 from django.contrib.auth.models import User
 from inventory.models import Producer
-from inventory.serializers.user_serializer import UserSerializer
 from inventory.serializers.producer_serializer import ProducerSerializer
-from inventory.permissions import IsAdminUser, IsProducerUser
 from django.contrib.auth import get_user_model
 
-# User = get_user_model()
-
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [IsAuthenticated, IsAdminUser]
-
-# class ProducerViewSet(viewsets.ModelViewSet):
-#     queryset = Producer.objects.all()
-#     serializer_class = ProducerSerializer
-#     permission_classes = [IsAuthenticated, IsProducerUser]
+class ProducerViewSet(viewsets.ModelViewSet):
+    queryset = Producer.objects.all()
+    serializer_class = ProducerSerializer
+    permission_classes = [IsAuthenticated]
 
         
 # class MultipleSerializerMixin:

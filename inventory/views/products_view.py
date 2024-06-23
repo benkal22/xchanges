@@ -4,9 +4,11 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework import viewsets
 from ..models import Product
 from ..serializers.product_serializer import ProductSerializer, ProductSerializerRestrict
+from rest_framework.permissions import IsAuthenticated
 
 class ProductViewSet(ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Product.objects.all()

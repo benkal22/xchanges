@@ -1,47 +1,21 @@
-#Models Backend app:inventory Project: xchanges
+# inventory/models.py
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from ..managers import CustomUserManager
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)  # Champ email unique
+    
+    # Définir le champ USERNAME_FIELD à 'username' et REQUIRED_FIELDS à ['email']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
+
+    objects = CustomUserManager()  # Utilisez le gestionnaire personnalisé
+
+    def __str__(self):
+        return self.username
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
-from inventory.models.products import Product
-from inventory.models.provinces import Province
-from inventory.models.users import CustomUser
-
-#Producer model défini comme utilisateur de l'application
-class Producer(AbstractUser):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='user_producer')
-    company_name = models.fields.CharField(max_length=100)
-    manager_name = models.fields.CharField(max_length=100)
-    profile_photo = models.ImageField(verbose_name='Photo de profil entreprise', blank=True, null=True)
-    address = models.fields.CharField(max_length=255)
-    tax_code = models.fields.CharField(max_length=100, blank=True, null=True)
-    nrc = models.fields.CharField(max_length=100, blank=True, null=True)
-    nat_id = models.fields.CharField(max_length=100, blank=True, null=True)
-    phone_number = models.fields.CharField(max_length=20)
-    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='producer_province')
-    product = models.ManyToManyField(Product, blank=True) 
-    sector_label =  models.fields.CharField(blank=True, null=True, max_length=200)
-    about =  models.fields.CharField(blank=True, null=True, max_length=1000)
-
-    def __str__(self) -> str:
-        return f'{self.company_name}'
-    
-    # Champs nécessaires pour éviter les conflits
-    groups = models.ManyToManyField(
-        Group,
-        related_name='producer_set',  # Changez le related_name pour éviter les conflits
-        blank=True,
-        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
-        verbose_name='groups',
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name='producer_permissions_set',  # Changez le related_name pour éviter les conflits
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions',
-    )
-    
-    from django.db import models
 from inventory.models.products import Product
 from inventory.models.producers import Producer
 from inventory.models.provinces import Province
@@ -50,18 +24,18 @@ from inventory.models.provinces import Province
 class CompanyClient(models.Model):
     product = models.ManyToManyField(Product)
     producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_company_client')
-    company_name = models.fields.CharField(max_length=100)
-    manager_name = models.fields.CharField(max_length=100)
-    address = models.fields.CharField(max_length=255)
-    tax_code = models.fields.CharField(max_length=100, null=True)
-    nrc = models.fields.CharField(max_length=100, null=True)
-    nat_id = models.fields.CharField(max_length=100, null=True)
-    email = models.fields.CharField(max_length=100, null=True)
-    phone_number = models.fields.CharField(max_length=20, null=True)
-    country = models.fields.CharField(max_length=100)
+    company_name = models.CharField(max_length=100)
+    manager_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    tax_code = models.CharField(max_length=100, null=True)
+    nrc = models.CharField(max_length=100, null=True)
+    nat_id = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+    phone_number = models.CharField(max_length=20, null=True)
+    country = models.CharField(max_length=100)
     province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='company_client_province')
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f'{self.company_name}'
 
 from django.db import models
@@ -70,16 +44,46 @@ from inventory.models.producers import Producer
 #PersonalClient
 class PersonalClient(models.Model):
     producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_personal_client')
-    # personal_client_id = models.AutoField(primary_key=True)
-    personal_client_name = models.fields.CharField(max_length=100)
-    address = models.fields.CharField(max_length=255)
-    email = models.fields.CharField(max_length=100, null=True)
-    phone_number = models.fields.CharField(max_length=20, null=True)
-    country = models.fields.CharField(max_length=100)
-    province = models.fields.CharField(max_length=100)
+    personal_client_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    email = models.CharField(max_length=100, null=True)
+    phone_number = models.CharField(max_length=20, null=True)
+    country = models.CharField(max_length=100)
+    province = models.CharField(max_length=100)
+
+from django.db import models, transaction
+from django.contrib.auth.models import AbstractUser, Group, Permission, AbstractBaseUser, PermissionsMixin
+from inventory.models.products import Product
+from inventory.models.provinces import Province
+from inventory.models.users import CustomUser
+
+# Producer model défini comme utilisateur de l'application
+class Producer(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='user_producer')
+    company_name = models.CharField(max_length=100)
+    manager_name = models.CharField(max_length=100)
+    profile_photo = models.ImageField(verbose_name='Photo de profil entreprise', blank=True, null=True)
+    address = models.CharField(max_length=255)
+    tax_code = models.CharField(max_length=100, blank=True, null=True)
+    nrc = models.CharField(max_length=100, blank=True, null=True)
+    nat_id = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=20)
+    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='producer_province')
+    product = models.ManyToManyField(Product, blank=True, related_name='producers')
+    sector_label = models.CharField(blank=True, null=True, max_length=200)
+    about = models.CharField(blank=True, null=True, max_length=1000)
+    is_actived = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=False)
     
-    def __str__(self) -> str:
-        return f'{self.personal_client_name}'
+    def __str__(self):
+        return self.company_name
+    
+    @transaction.atomic
+    def disable(self):
+        if self.is_actived is False:
+            return 
+        self.is_actived = False
+        self.save()
 
 from django.db import models
 
@@ -128,15 +132,15 @@ from inventory.models.suppliers import Supplier
 
 #Achat chez le fournisseur
 class Purchase(models.Model):
-    supplier = models.ForeignKey(Supplier, null=True, on_delete=models.CASCADE, related_name='supplier_purchase')
+    supplier = models.ForeignKey('Supplier', null=True, on_delete=models.CASCADE, related_name='supplier_purchase')
     producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_purchase')
-    # product = models.ForeignKey(Product, null=True, on_delete=models.CASCADE, related_name='product_purchase')
     product = models.ManyToManyField(Product)
-    price = models.fields.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.fields.IntegerField()
-    tva = models.fields.DecimalField(max_digits=5, decimal_places=2, null=True)
-    date = models.fields.DateField()
-    def __str__(self) -> str:
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField()
+    tva = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    date = models.DateField()
+    
+    def __str__(self):
         return f'{self.quantity}'
 
 from django.db import models
@@ -149,16 +153,15 @@ from inventory.models.personal_clients import PersonalClient
 #Vente au client
 class Sale(models.Model):
     producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_sale')
-    # client_id = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='client_sale')
     company_id = models.ForeignKey(CompanyClient, on_delete=models.CASCADE, related_name='company_client_sale', null=True)
     personal_client_id = models.ForeignKey(PersonalClient, on_delete=models.CASCADE, related_name='personal_client_sale', null=True)
-    # product = models.ForeignKey(Product, null=True, on_delete=models.CASCADE, related_name='secteur_activite')
     product = models.ManyToManyField(Product)
-    price = models.fields.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.fields.IntegerField()
-    tva = models.fields.DecimalField(max_digits=5, decimal_places=2)
-    date = models.fields.DateField()
-    def __str__(self) -> str:
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField()
+    tva = models.DecimalField(max_digits=5, decimal_places=2)
+    date = models.DateField()
+    
+    def __str__(self):
         return f'{self.quantity}'
 
 from django.db import models
@@ -182,7 +185,9 @@ class Supplier(models.Model):
     province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='supplier_province')
     sector_label = models.CharField(blank=True, null=True, max_length=200)
     
-    def __str__(self) -> str:
+    def __str__(self):
         return f'{self.company_name}'
     
+
+
 
