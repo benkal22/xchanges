@@ -1,5 +1,4 @@
 env
 db.sqlite3
-react-ui/node_modules
-static/static/assets
+/static/assets
 node_modules
