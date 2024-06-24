@@ -1,3 +1,4 @@
+
 # inventory/views/sales_view.py
 from django.shortcuts import render
 from rest_framework import viewsets

@@ -11,6 +11,10 @@
         <a href="{% url 'client-company-detail' companyClient.company_client_id %}">{{companyClient.company_name}}</a>
     </li>
     {% endfor %}  
+
+    {% for client in company_clients %}
+            <li>{{ client.nom }} - {{ client.email }}</li>
+        {% endfor %}
 </ul>
 
 <h4>Clients personnels</h4>
