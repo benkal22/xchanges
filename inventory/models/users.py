@@ -14,6 +14,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    def __unicode__(self):
+        return self.username
 
 class PasswordReset(models.Model):
     email = models.EmailField()

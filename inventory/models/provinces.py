@@ -9,3 +9,13 @@ class Province(models.Model):
     rank =  models.fields.CharField(max_length=150, blank=True, null=True)
     def __str__(self) -> str:
         return f'{self.name}'
+    
+    class Meta:
+        verbose_name = 'Province'
+        verbose_name_plural = 'Provinces'
+    
+    def __unicode__(self):
+        return self.name
+    
+    def __str__(self):
+        return self.name

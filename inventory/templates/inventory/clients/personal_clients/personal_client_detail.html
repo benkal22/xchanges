@@ -1,0 +1,18 @@
+<!-- inventory/templates/inventory/company_personal_clients/company_personal_client_detail.html -->
+
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{{ personal_client.name }}</h2>
+            <p>{{ personal_client.address }}</p>
+            <p>{{ personal_client.email }}</p>
+            <p>{{ personal_client.phone_number }}</p>
+            <!-- Ajoutez d'autres détails ici -->
+        </div>
+    </div>
+</div>
+{% endblock %}

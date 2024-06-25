@@ -1,0 +1,80 @@
+<!-- inventory/templates/inventory/suppliers/supplier_detail.html -->
+
+{% extends 'inventory/supplier/supplier_base.html' %}
+{% load static %}
+
+{% block content_profile_detail %}
+
+ <!-- Profile Overview Tab -->
+ <div class="tab-pane fade show active profile-overview" id="profile-overview">
+    <h2>{{ supplier.company_name }}</h2>
+
+    <h5 class="card-title">A propos</h5>
+    <p class="small fst-italic">{{ supplier.about }}</p>
+
+    <h5 class="card-title">Détails</h5>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Nom du propriétaire</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.manager_name }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Secteur d'activité</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.sector_label }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Produits ou Services de l'entreprise</div>
+        <div class="col-lg-9 col-md-8">
+            <div>
+                {% for product in supplier.product.all %}
+                    <li>{{ product.product_label }} (Code: {{ product.product_code }})</li>
+                {% empty %}
+                    <li>Aucun produit associé</li>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Province</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.province }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Adresse</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.address }}</div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Numéro Impôt</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.tax_code }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">NRC</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.nrc }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Identification nationale</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.nat_id }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Téléphone</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.phone_number }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Email</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.email }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-4 label">Nom d'utilisateur</div>
+        <div class="col-lg-9 col-md-8">{{ supplier.username }}</div>
+    </div>
+</div>
+{% endblock %}

@@ -22,4 +22,11 @@ class Supplier(models.Model):
     def __str__(self):
         return f'{self.company_name}'
     
+    class Meta:
+        verbose_name = 'Fournisseur'
+        verbose_name_plural = 'Fournisseurs'
+    
+    def __unicode__(self):
+        return self.company_name
+    
 

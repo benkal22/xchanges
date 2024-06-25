@@ -1,9 +1,10 @@
 from django.db import models
 
 from inventory.models.producers import Producer
-from inventory.models.products import Product
-from inventory.models.company_clients import CompanyClient
-from inventory.models.personal_clients import PersonalClient
+from inventory.models.clients import Client
+from inventory.models.products import Product, ProductProd
+from inventory.models.clients import Client, CompanyClient, PersonalClient
+from django.utils import timezone
 
 #Vente au client
 class Sale(models.Model):
@@ -18,3 +19,29 @@ class Sale(models.Model):
     
     def __str__(self):
         return f'{self.quantity}'
+    
+    class Meta:
+        verbose_name = 'Vente'
+        verbose_name_plural = 'Ventes'
+    
+    def __unicode__(self):
+        return self.quantity
+
+class SalesOrder(models.Model):
+    producer = models.ForeignKey(Producer, on_delete=models.CASCADE, related_name='sales_order_producer')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='sales_order_client')
+    order_date = models.DateTimeField(default=timezone.now)
+    shipped_date = models.DateTimeField(blank=True, null=True)
+    completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"SO-{self.id} for {self.client.name}"
+
+class SalesOrderItem(models.Model):
+    sales_order = models.ForeignKey(SalesOrder, related_name='items_sale', on_delete=models.CASCADE)
+    product_prod = models.ForeignKey(ProductProd, on_delete=models.CASCADE, related_name='sales_product_prod')
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product_prod.product}"

@@ -1,0 +1,28 @@
+<!-- inventory/templates/inventory/company_clients/company_client_delete.html -->
+
+{% extends 'inventory/company_client/company_client_base.html' %}
+{% load static %}
+{% block content_profile_delete %}
+
+<div class="modal fade" id="deleteProducerModal" tabindex="-1" aria-labelledby="deleteProducerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteProducerModalLabel">Supprimer Client Entreprise</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer ce Client Entreprise ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'company_client_delete' company_client.id %}">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

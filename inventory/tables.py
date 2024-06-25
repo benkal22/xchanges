@@ -27,7 +27,7 @@ class CompanyClientTable(tables.Table):
 
 # inventory/tables.py
 import django_tables2 as tables
-from .models import Supplier
+from .models import Supplier, Producer
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -42,4 +42,5 @@ class SupplierTable(tables.Table):
         model = Supplier
         template_name = 'django_tables2/bootstrap.html'
         fields = ('company_name', 'manager_name', 'address', 'phone_number', 'actions')
+
 

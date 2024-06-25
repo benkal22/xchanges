@@ -1,0 +1,29 @@
+<!-- inventory/templates/inventory/company_clients/company_client_edit.html -->
+
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" action="{% url 'edit_company_client' client.id %}">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+        <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+        <div>
+            {{ field }}
+            {% if field.errors %}
+            <div class="text-danger">
+                {% for error in field.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <br>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
+</form>
+{% endblock %}

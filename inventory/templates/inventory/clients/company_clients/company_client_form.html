@@ -1,0 +1,26 @@
+<!-- inventory/templates/inventory/company_clients/company_client_form.html -->
+
+{% extends 'inventory/base.html' %}
+
+{% block title %}
+{% if client %}
+Éditer {{ client.company_name }} - Xchanges DRC App
+{% else %}
+Ajouter un Client Entreprise - Xchanges DRC App
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% if client %}Éditer {{ client.company_name }}{% else %}Ajouter un Client Entreprise{% endif %}</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

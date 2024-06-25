@@ -1,3 +1,5 @@
+<!-- inventory/templates/inventory/producers/producer_delete_confirmation.html -->
+
 {% extends 'inventory/base.html' %}
 
 {% block title %}
@@ -13,7 +15,7 @@ Confirmation de Suppression - Xchanges DRC App
             <form action="{% url 'remove_producer' producer.pk %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Confirmer la Suppression</button>
-                <a href="{% url 'producer_list' %}" class="btn btn-secondary">Annuler</a>
+                <a href="{% url 'producers_list' %}" class="btn btn-secondary">Annuler</a>
             </form>
         </div>
     </div>

@@ -14,43 +14,15 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    def __unicode__(self):
+        return self.username
 
-from django.db import models
-from inventory.models.products import Product
-from inventory.models.producers import Producer
-from inventory.models.provinces import Province
-
-#CompanyClient
-class CompanyClient(models.Model):
-    product = models.ManyToManyField(Product)
-    producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_company_client')
-    company_name = models.CharField(max_length=100)
-    manager_name = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    tax_code = models.CharField(max_length=100, null=True)
-    nrc = models.CharField(max_length=100, null=True)
-    nat_id = models.CharField(max_length=100, null=True)
-    email = models.CharField(max_length=100, null=True)
-    phone_number = models.CharField(max_length=20, null=True)
-    country = models.CharField(max_length=100)
-    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='company_client_province')
-
-    def __str__(self):
-        return f'{self.company_name}'
-
-from django.db import models
-from inventory.models.producers import Producer
-
-#PersonalClient
-class PersonalClient(models.Model):
-    producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_personal_client')
-    personal_client_name = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    email = models.CharField(max_length=100, null=True)
-    phone_number = models.CharField(max_length=20, null=True)
-    country = models.CharField(max_length=100)
-    province = models.CharField(max_length=100)
-
+class PasswordReset(models.Model):
+    email = models.EmailField()
+    token = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
 from django.db import models, transaction
 from django.contrib.auth.models import AbstractUser, Group, Permission, AbstractBaseUser, PermissionsMixin
 from inventory.models.products import Product
@@ -75,6 +47,13 @@ class Producer(models.Model):
     is_actived = models.BooleanField(default=True)
     is_approved = models.BooleanField(default=False)
     
+    class Meta:
+        verbose_name = 'Producteur'
+        verbose_name_plural = 'Producteurs'
+    
+    def __unicode__(self):
+        return self.company_name
+    
     def __str__(self):
         return self.company_name
     
@@ -85,6 +64,100 @@ class Producer(models.Model):
         self.is_actived = False
         self.save()
 
+from django.db import models
+from django.db import models
+from inventory.models.products import Product, ProductProd
+from inventory.models.producers import Producer
+from inventory.models.provinces import Province
+from inventory.models.producers import Producer
+
+class Client(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    address = models.TextField()
+    province = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+#CompanyClient
+class CompanyClient(models.Model):
+    product = models.ManyToManyField(Product)
+    producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_company_client')
+    company_name = models.CharField(max_length=100)
+    manager_name = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=255, null=True)
+    tax_code = models.CharField(max_length=100, null=True)
+    nrc = models.CharField(max_length=100, null=True)
+    nat_id = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+    phone_number = models.CharField(max_length=20, null=True)
+    country = models.CharField(max_length=100)
+    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='company_client_province')
+
+    class Meta:
+        verbose_name = 'Client Entreprise'
+        verbose_name_plural = 'Clients Entreprise'
+    
+    def __unicode__(self):
+        return self.company_name
+    
+    def __str__(self):
+        return f'{self.company_name}'
+
+#PersonalClient
+class PersonalClient(models.Model):
+    producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_personal_client')
+    personal_client_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    email = models.CharField(max_length=100, null=True)
+    phone_number = models.CharField(max_length=20, null=True)
+    country = models.CharField(max_length=100)
+    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='personal_client_province')
+
+    class Meta:
+        verbose_name = 'Client Personnel'
+        verbose_name_plural = 'Clients Personnels'
+    
+    def __unicode__(self):
+        return self.personal_client_name
+    
+    def __str__(self):
+        return f'{self.personal_client_name}'
+
+from django.db import models
+from inventory.models.products import Product
+from inventory.models.producers import Producer
+from inventory.models.provinces import Province
+
+#Supplier model
+class Supplier(models.Model):
+    product = models.ManyToManyField(Product, blank=True) 
+    producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_supplier')
+    company_name = models.CharField(max_length=100)
+    manager_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    tax_code = models.CharField(max_length=100, null=True)
+    nrc = models.CharField(max_length=100, null=True)
+    nat_id = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+    phone_number = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='supplier_province')
+    sector_label = models.CharField(blank=True, null=True, max_length=200)
+    
+    def __str__(self):
+        return f'{self.company_name}'
+    
+    class Meta:
+        verbose_name = 'Fournisseur'
+        verbose_name_plural = 'Fournisseurs'
+    
+    def __unicode__(self):
+        return self.company_name
+    
 from django.db import models
 
 class Product(models.Model):
@@ -111,6 +184,23 @@ class Product(models.Model):
             
             # Enregistrer les modifications
             product.save()
+    class Meta:
+        verbose_name = 'Produit'
+        verbose_name_plural = 'Produits'
+    
+    def __unicode__(self):
+        return self.product_label
+
+from inventory.models.products import Product
+
+class ProductProd(models.Model):
+    product = models.ManyToManyField(Product, blank=True, related_name='product_product_prod')
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock_quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.product
 
 from django.db import models
 
@@ -123,12 +213,24 @@ class Province(models.Model):
     rank =  models.fields.CharField(max_length=150, blank=True, null=True)
     def __str__(self) -> str:
         return f'{self.name}'
+    
+    class Meta:
+        verbose_name = 'Province'
+        verbose_name_plural = 'Provinces'
+    
+    def __unicode__(self):
+        return self.name
+    
+    def __str__(self):
+        return self.name
 
 from django.db import models
 
 from inventory.models.producers import Producer
-from inventory.models.products import Product
+from inventory.models.products import Product, ProductProd
 from inventory.models.suppliers import Supplier
+
+from django.utils import timezone
 
 #Achat chez le fournisseur
 class Purchase(models.Model):
@@ -143,12 +245,39 @@ class Purchase(models.Model):
     def __str__(self):
         return f'{self.quantity}'
 
+    class Meta:
+        verbose_name = 'Achat'
+        verbose_name_plural = 'Achats'
+    
+    def __unicode__(self):
+        return self.quantity
+
+class PurchaseOrder(models.Model):
+    producer = models.ForeignKey(Producer, on_delete=models.CASCADE, related_name='producer_purchase_order')
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='supplier_purchase_order')
+    order_date = models.DateTimeField(default=timezone.now)
+    expected_delivery_date = models.DateTimeField()
+    received = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"PO-{self.id} from {self.supplier.name}"
+
+class PurchaseOrderItem(models.Model):
+    purchase_order = models.ForeignKey(PurchaseOrder, related_name='items_purchases', on_delete=models.CASCADE)
+    product_prod = models.ForeignKey(ProductProd, on_delete=models.CASCADE, related_name='product_prod_purchases')
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product.name}"
+
 from django.db import models
 
 from inventory.models.producers import Producer
-from inventory.models.products import Product
-from inventory.models.company_clients import CompanyClient
-from inventory.models.personal_clients import PersonalClient
+from inventory.models.clients import Client
+from inventory.models.products import Product, ProductProd
+from inventory.models.clients import Client, CompanyClient, PersonalClient
+from django.utils import timezone
 
 #Vente au client
 class Sale(models.Model):
@@ -163,31 +292,47 @@ class Sale(models.Model):
     
     def __str__(self):
         return f'{self.quantity}'
-
-from django.db import models
-from inventory.models.products import Product
-from inventory.models.producers import Producer
-from inventory.models.provinces import Province
-
-#Supplier model
-class Supplier(models.Model):
-    product = models.ManyToManyField(Product, blank=True) 
-    producer = models.ForeignKey(Producer, null=True, on_delete=models.CASCADE, related_name='producer_supplier')
-    company_name = models.CharField(max_length=100)
-    manager_name = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    tax_code = models.CharField(max_length=100, null=True)
-    nrc = models.CharField(max_length=100, null=True)
-    nat_id = models.CharField(max_length=100, null=True)
-    email = models.CharField(max_length=100, null=True)
-    phone_number = models.CharField(max_length=20)
-    country = models.CharField(max_length=100)
-    province = models.ForeignKey(Province, null=True, on_delete=models.CASCADE, related_name='supplier_province')
-    sector_label = models.CharField(blank=True, null=True, max_length=200)
     
+    class Meta:
+        verbose_name = 'Vente'
+        verbose_name_plural = 'Ventes'
+    
+    def __unicode__(self):
+        return self.quantity
+
+class SalesOrder(models.Model):
+    producer = models.ForeignKey(Producer, on_delete=models.CASCADE, related_name='sales_order_producer')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='sales_order_client')
+    order_date = models.DateTimeField(default=timezone.now)
+    shipped_date = models.DateTimeField(blank=True, null=True)
+    completed = models.BooleanField(default=False)
+
     def __str__(self):
-        return f'{self.company_name}'
+        return f"SO-{self.id} for {self.client.name}"
+
+class SalesOrderItem(models.Model):
+    sales_order = models.ForeignKey(SalesOrder, related_name='items_sale', on_delete=models.CASCADE)
+    product_prod = models.ForeignKey(ProductProd, on_delete=models.CASCADE, related_name='sales_product_prod')
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product_prod.product}"
     
+from django.db import models
+from inventory.models.products import Product, ProductProd
+from django.utils import timezone
 
+class InventoryTransaction(models.Model):
+    TRANSACTION_TYPE_CHOICES = [
+        ('IN', 'Incoming'),
+        ('OUT', 'Outgoing')
+    ]
 
+    product_prod = models.ForeignKey(ProductProd, on_delete=models.CASCADE, related_name="product_prod_inventory")
+    transaction_type = models.CharField(max_length=3, choices=TRANSACTION_TYPE_CHOICES)
+    quantity = models.PositiveIntegerField()
+    transaction_date = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return f"{self.transaction_type} {self.quantity} of {self.product_prod.product}"
