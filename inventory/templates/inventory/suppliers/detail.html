@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Détails du Fournisseur{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Détails du Fournisseur</h1>
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom de la société</th>
+            <td>{{ supplier.company_name }}</td>
+        </tr>
+        <tr>
+            <th>Nom du manager</th>
+            <td>{{ supplier.manager_name }}</td>
+        </tr>
+        <tr>
+            <th>Adresse</th>
+            <td>{{ supplier.address }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ supplier.email }}</td>
+        </tr>
+        <tr>
+            <th>Numéro de téléphone</th>
+            <td>{{ supplier.phone_number }}</td>
+        </tr>
+        <tr>
+            <th>Pays</th>
+            <td>{{ supplier.country }}</td>
+        </tr>
+        <tr>
+            <th>Province</th>
+            <td>{{ supplier.province }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'supplier_update' supplier.pk %}" class="btn btn-warning">Modifier</a>
+    <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-danger">Supprimer</a>
+    <a href="{% url 'suppliers_list' %}" class="btn btn-secondary">Retour</a>
+</div>
+{% endblock %}

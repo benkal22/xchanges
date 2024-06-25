@@ -11,56 +11,103 @@ from inventory.models import Producer
 from inventory.serializers.producer_serializer import ProducerSerializer
 from django.contrib.auth import get_user_model
 
+
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from django.views.decorators.http import require_POST
+from inventory.forms.all_forms import ProducerForm
+import json
+from django.shortcuts import redirect
+
 class ProducerViewSet(viewsets.ModelViewSet):
     queryset = Producer.objects.all()
     serializer_class = ProducerSerializer
     permission_classes = [IsAuthenticated]
 
-        
-# class MultipleSerializerMixin:
-#     detail_serializer_class = None
-    
-#     def get_serializer_class(self):
-#         if self.action == 'retrieve' and self.detail_serializer_class is not None:
-#             return self.detail_serializer_class
-#         return super().get_serializer_class()
-    
-# class ProducerViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
-#     serializer_class = ProducerListSerializer
-    
-#     detail_serializer_class = ProducerDetailSerializer
-    
-#     def get_queryset(self):
-#         return Producer.objects.filter(is_active=True)
-    
-#     def get_serializer_class(self):
-#         # Si l'action demandée est retrieve nous retournons le serializer de détail
-#         if self.action == 'retrieve':
-#             return self.detail_serializer_class
-#         return super().get_serializer_class()
-    
-#     @action(detail=True, methods=['post'])
-#     def disable(self, request, pk):
-#         self.get_object().disable()
-#         return Response()
 
-# class ProducerAdminViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
-#     serializer_class = ProducerListSerializer
+def index(request):
+    return render(request, 'inventory/producers/index.html', {})
+
+def producer_list(request):
+    producers = Producer.objects.all()
+    return render(request, 'inventory/producers/producer_list.html', {'producers': producers})
+
+# def add_producer(request):
+#     if request.method == 'POST':
+#         form = ProducerForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             producer = form.save()
+#             return HttpResponse(
+#                 status=204,
+#                 headers={
+#                     'HX-Trigger': json.dumps({
+#                         'producerListChanged': None,
+#                         'showMessage': f'{producer.company_name} ajouté.'
+#                     })
+#                 }
+#             )
+#         else:
+#             return render(request, 'inventory/producers/producer_form.html', {'form': form})
+#     else:
+#         form = ProducerForm()
+#     return render(request, 'inventory/producers/producer_form.html', {'form': form})
+
+# def edit_producer(request, pk):
+#     producer = get_object_or_404(Producer, pk=pk)
+#     if request.method == 'POST':
+#         form = ProducerForm(request.POST, request.FILES, instance=producer)
+#         if form.is_valid():
+#             producer = form.save()
+#             return HttpResponse(
+#                 status=204,
+#                 headers={
+#                     'HX-Trigger': json.dumps({
+#                         'producerListChanged': None,
+#                         'showMessage': f'{producer.company_name} mis à jour.'
+#                     })
+#                 }
+#             )
+#         else:
+#             return render(request, 'inventory/producers/producer_form.html', {'form': form, 'producer': producer})
+#     else:
+#         form = ProducerForm(instance=producer)
+#     return render(request, 'inventory/producers/producer_form.html', {'form': form, 'producer': producer})
+
+def add_producer(request):
+    if request.method == 'POST':
+        form = ProducerForm(request.POST, request.FILES)
+        if form.is_valid():
+            producer = form.save()
+            return redirect('producer_list')  # Redirige vers producer_list
+        else:
+            return render(request, 'inventory/producers/producer_form.html', {'form': form})
+    else:
+        form = ProducerForm()
+    return render(request, 'inventory/producers/producer_form.html', {'form': form})
+
+def edit_producer(request, pk):
+    producer = get_object_or_404(Producer, pk=pk)
+    if request.method == 'POST':
+        form = ProducerForm(request.POST, request.FILES, instance=producer)
+        if form.is_valid():
+            producer = form.save()
+            return redirect('producer_list')  # Redirige vers producer_list
+        else:
+            return render(request, 'inventory/producers/producer_form.html', {'form': form, 'producer': producer})
+    else:
+        form = ProducerForm(instance=producer)
+    return render(request, 'inventory/producers/producer_form.html', {'form': form, 'producer': producer})
+
+def remove_producer_confirmation(request, pk):
+    producer = get_object_or_404(Producer, pk=pk)
+    return render(request, 'inventory/producers/producer_delete_confirmation.html', {'producer': producer})
+
+@require_POST
+def remove_producer(request, pk):
+    producer = get_object_or_404(Producer, pk=pk)
+    company_name = producer.company_name  # Pour l'utilisation dans le message de confirmation
     
-#     detail_serializer_class = ProducerDetailSerializer
+    producer.delete()
     
-#     def get_queryset(self):
-#         return Producer.objects.all()
-    
-#     def get_serializer_class(self):
-#         # Si l'action demandée est retrieve nous retournons le serializer de détail
-#         if self.action == 'retrieve':
-#             return self.detail_serializer_class
-#         return super().get_serializer_class()
-    
-#     @action(detail=True, methods=['post'])
-#     def disable(self, request, pk):
-#         self.get_object().disable()
-#         return Response()
-    
-#     permission_classes = [IsAuthenticated]
+    # Redirection vers producer_list avec un message
+    return redirect('producer_list')

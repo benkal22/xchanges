@@ -22,6 +22,13 @@ class Producer(models.Model):
     is_actived = models.BooleanField(default=True)
     is_approved = models.BooleanField(default=False)
     
+    class Meta:
+        verbose_name = 'Producteur'
+        verbose_name_plural = 'Producteurs'
+    
+    def __unicode__(self):
+        return self.company_name
+    
     def __str__(self):
         return self.company_name
     

@@ -1,0 +1,87 @@
+<!-- inventory/templates/inventory/suppliers/list.html -->
+{% extends "inventory/base.html" %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block title %}Liste des Fournisseurs{% endblock %}
+
+{% block content %}
+<div class="container mt-4" x-data="{ showForm: false }">
+    <h1>Liste des Fournisseurs</h1>
+    <div class="mb-3">
+        <button class="btn btn-success" @click="showForm = true">Ajouter un Fournisseur</button>
+    </div>
+    <div id="supplier-form" x-show="showForm" style="display: none;">
+        <form method="post" hx-post="{% url 'supplier_create' %}" hx-target="#supplier-form" hx-swap="innerHTML">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <br/>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="button" class="btn btn-secondary" @click="showForm = false">Annuler</button>
+            </div>
+        </form>
+    </div>
+    <form method="get" class="mb-3">
+        {{ filter.form|crispy }}
+        <button type="submit" class="btn btn-primary">Filtrer</button>
+    </form>
+    <div>
+        {% render_table table %}
+    </div>
+</div>
+{% endblock %}
+
+<!-- Inclure Alpine.js et HTMX -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@1.x.x/dist/htmx.min.js" defer></script>
+
+<script>
+document.addEventListener('htmx:configRequest', function(event) {
+    console.log('HTMX request:', event.detail);
+});
+
+document.addEventListener('htmx:beforeRequest', function(event) {
+    console.log('Before HTMX request:', event.detail);
+});
+
+document.addEventListener('htmx:afterRequest', function(event) {
+    console.log('After HTMX request:', event.detail);
+});
+</script>
+
+{% comment %} <!-- list.html -->
+{% extends "inventory/base.html" %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+{% block title %}Liste des Fournisseurs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Liste des Fournisseurs</h1>
+    <div class="mb-3">
+        <button class="btn btn-success" @click="showForm = true">Ajouter un Fournisseur</button>
+    </div>
+    <div x-data="{ showForm: false }">
+        <div id="supplier-form" x-show="showForm" style="display: none;">
+            <form method="post" hx-post="{% url 'supplier_create' %}" hx-target="#supplier-form" hx-swap="innerHTML">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+    <form method="get" class="mb-3">
+        {{ filter.form|crispy }}
+        <button type="submit" class="btn btn-primary">Filtrer</button>
+    </form>
+    <div>
+        {% render_table table %}
+    </div>
+</div>
+{% endblock %}
+
+<!-- Include Alpine.js and HTMX -->
+<script src="https://unpkg.com/alpinejs" defer></script>
+<script src="https://unpkg.com/htmx.org"></script> {% endcomment %}

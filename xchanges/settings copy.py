@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'django_filters',
-    'crispy_bootstrap4',
     'inventory',
 ]
 
@@ -166,24 +165,6 @@ TEMPLATES = [
     },
 ]
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),  # Chemin global pour vos templates
-            os.path.join(BASE_DIR, 'inventory', 'templates'),  # Chemin spécifique pour l'application inventory
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
 
 
 WSGI_APPLICATION = 'xchanges.wsgi.application'
@@ -276,13 +257,13 @@ EMAIL_HOST_PASSWORD = 'your_password'     # Le mot de passe de votre compte Gmai
 #Test à supprimer
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# import environ
+import environ
 import os
 
 # Initialise le package environ
-# env = environ.Env()
+env = environ.Env()
 # Lis le fichier .env s'il existe
-# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Utilisation de la variable PASSWORD_RESET_BASE_URL
-# PASSWORD_RESET_BASE_URL = env('PASSWORD_RESET_BASE_URL', default='http://127.0.0.1:8000/reset_password')
+PASSWORD_RESET_BASE_URL = env('PASSWORD_RESET_BASE_URL', default='http://127.0.0.1:8000/reset_password')

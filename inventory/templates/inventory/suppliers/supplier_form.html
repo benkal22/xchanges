@@ -1,0 +1,28 @@
+<!-- inventory/templates/inventory/suppliers/supplier_form.html -->
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+<form method="post" hx-post="{% url 'supplier_create' %}" hx-target="#supplier-form" hx-swap="innerHTML">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <button type="button" class="btn btn-secondary" @click="showForm = false">Annuler</button>
+    </div>
+</form>
+
+<script>
+document.addEventListener("htmx:afterSwap", (event) => {
+    if (event.detail.xhr.status === 200) {
+        const response = JSON.parse(event.detail.xhr.responseText);
+        if (!response.success) {
+            for (const [field, errors] of Object.entries(response.errors)) {
+                const input = document.querySelector(`[name=${field}]`);
+                if (input) {
+                    input.insertAdjacentHTML('afterend', `<div class="text-danger">${errors.join(', ')}</div>`);
+                }
+            }
+        }
+    }
+});
+</script>
